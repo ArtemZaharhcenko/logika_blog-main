@@ -1,12 +1,23 @@
 from flask import Flask, render_template
-
+from db_scripts import DBManager
 
 app = Flask(__name__)  # Створюємо веб–додаток Flask
-
+db = DBManager("blog.db")
 
 @app.route("/")  # Вказуємо url-адресу для виклику функції
 def index():
-    return render_template("index.html")  # html-сторінка, що повертається у браузер
+    categories = db.get_categories()
+    articles = db.get_articles()
+    return render_template("index.html", articles=articles, categories=categories)  # html-сторінка, що повертається у браузер
+
+
+@app.route("/category/<int:category_id>")  # Вказуємо url-адресу для виклику функції
+def category_page(category_id):
+    categories = db.get_categories()
+    articles = db.get_articles()
+    return render_template("index.html", articles=articles, categories=categories)  # html-сторінка, що повертається у браузер
+
+
 
 
 if __name__ == "__main__":
